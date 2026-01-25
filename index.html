@@ -7,7 +7,7 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --blue: #2667ff; --yellow: #FBBF24; --white: #ffffff; --dark: #1e293b; --green-wa: #25d366; --gray-lider: #888888; --bg-gray: #eeeeee; --red: #ef4444; }
+        :root { --blue: #2667ff; --yellow: #FBBF24; --white: #ffffff; --dark: #1e293b; --green-wa: #25d366; --gray-lider: #888888; --bg-gray: #eeeeee; --red: #ef4444; --orange: #f97316; }
         
         body { font-family: 'Montserrat', sans-serif; background: #f3f4f6; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
@@ -44,14 +44,46 @@
         }
         .logout-floating:hover { transform: scale(1.1); color: var(--red); }
 
-        /* --- BURBUJA CHAT COACH IA (INFERIOR DERECHA) --- */
+        /* --- BOTONES KIDOM COINS (SOLO IMAGEN - 130PX TOP) --- */
+        .coins-container {
+            position: fixed;
+            top: 130px; 
+            left: 20px;
+            display: none; 
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1002;
+        }
+        .btn-kc {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 2px solid white;
+            transition: 0.3s;
+            overflow: hidden;
+            padding: 0; /* IMAGEN OCUPA TODO EL CIRCULO */
+        }
+        .btn-kc img { width: 100%; height: 100%; object-fit: cover; }
+        .btn-kc:hover { transform: scale(1.1); }
+        
+        .kc-yellow { background: var(--yellow); }
+        .kc-green { background: var(--green-wa); }
+        .kc-blue { background: var(--blue); }
+        .kc-orange { background: var(--orange); }
+
+        /* --- BURBUJA CHAT COACH IA --- */
         #chat-bubble { 
             position: fixed; 
             bottom: 20px; 
             right: 20px; 
-            background: var(--blue); 
-            width: 60px; 
-            height: 60px; 
+            background: var(--yellow); 
+            width: 65px; 
+            height: 65px; 
             border-radius: 50%; 
             display: none; 
             align-items: center; 
@@ -59,7 +91,14 @@
             cursor: pointer; 
             box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
             z-index: 1002; 
-            transition: 0.3s; 
+            transition: 0.3s;
+            overflow: hidden;
+            border: 2px solid white;
+        }
+        #chat-bubble img { 
+            width: 85%; 
+            height: 85%; 
+            object-fit: contain; 
         }
         #chat-bubble:hover { transform: scale(1.1); }
         
@@ -81,8 +120,8 @@
         .chat-header { background: var(--blue); color: white; padding: 15px; font-weight: 900; text-align: center; font-size: 14px; }
         .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #f8fafc; }
         .msg { padding: 10px 15px; border-radius: 15px; font-size: 12px; max-width: 80%; line-height: 1.4; font-weight: 700; }
-        .msg-coach { background: #e2e8f0; color: var(--dark); align-self: flex-start; border-bottom-left-radius: 2px; }
-        .msg-user { background: var(--blue); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .msg-coach { background: #e2e8f0; color: var(--dark); align-self: flex-start; }
+        .msg-user { background: var(--blue); color: white; align-self: flex-end; }
         .chat-input-area { padding: 15px; display: flex; gap: 10px; border-top: 1px solid #eee; }
         .chat-input { flex: 1; border: 1px solid #ddd; padding: 8px; border-radius: 10px; font-family: 'Montserrat'; font-size: 12px; outline: none; }
         .btn-send { background: var(--blue); color: white; border: none; padding: 8px 12px; border-radius: 10px; cursor: pointer; font-weight: 900; }
@@ -120,24 +159,76 @@
         .cost-row { display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; color: #64748b; margin-bottom: 4px; }
         .cost-total { display: flex; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 2px dashed #eee; font-size: 24px; font-weight: 900; color: var(--dark); }
         .progress-container { background: #e2e8f0; border-radius: 10px; height: 12px; width: 100%; margin: 8px 0; overflow: hidden; border: 1px solid #cbd5e1; }
-        .progress-bar { background: linear-gradient(90deg, var(--blue), #60a5fa); height: 100%; width: 0%; transition: width 1.5s ease-in-out; }
+        .progress-bar { background: var(--blue); height: 100%; width: 0%; transition: width 1.5s ease-in-out, background-color 0.5s; }
         .btn-logros { background: #dcfce7; border: 2px dashed #16a34a; color: #166534; padding: 10px; border-radius: 15px; font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: 0.3s; margin-top: 10px; }
         .btn-logros:hover { background: #bbf7d0; transform: scale(1.02); }
         .btn-wa-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; width: 100%; }
         .btn-wa { padding: 12px; border-radius: 12px; border: 2px solid var(--blue); color: var(--blue); text-decoration: none; font-weight: 900; font-size: 9px; text-transform: uppercase; text-align: center; }
         .btn-wa.active { background: var(--green-wa); color: white; border: none; }
+
+        /* --- MODALES --- */
+        #modal-logros, #modal-misiones { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-content { background: white; width: 90%; max-width: 500px; border-radius: 30px; overflow: hidden; position: relative; border: 4px solid var(--blue); box-shadow: 0 20px 50px rgba(0,0,0,0.5); transition: border-color 0.3s; }
+        .modal-header { background: var(--blue); color: white; padding: 15px; text-align: center; font-weight: 900; font-size: 16px; position: relative; transition: background-color 0.3s; }
+        .modal-close { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 22px; }
+        .modal-body { padding: 20px; max-height: 450px; overflow-y: auto; background: #f8fafc; }
+        
+        .mision-item { display: flex; justify-content: space-between; align-items: center; background: white; padding: 12px; border-radius: 15px; margin-bottom: 10px; border: 1.5px solid #eee; }
+        .mision-text { font-size: 11px; font-weight: 800; color: var(--dark); flex: 1; margin-right: 10px; line-height: 1.3; }
+        .btn-cumplido { padding: 6px 12px; border-radius: 10px; font-size: 9px; font-weight: 900; cursor: pointer; text-transform: uppercase; min-width: 80px; text-align: center; background: #eee; color: #666; transition: 0.3s; border: 2px solid transparent; }
+        .btn-cumplido.active { color: white; border-color: rgba(255,255,255,0.3); }
+
+        .modal-img { max-width: 100%; max-height: 450px; border-radius: 15px; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.2); object-fit: contain; }
+        .modal-img.active { display: block; animation: fadeInModal 0.4s ease-in-out; }
+        @keyframes fadeInModal { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        .modal-btn { position: absolute; top: 50%; transform: translateY(-50%); background: var(--blue); color: white; border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-weight: 900; z-index: 10; font-size: 20px; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .modal-btn:hover { background: var(--dark); transform: translateY(-50%) scale(1.1); }
+        .m-prev { left: 10px; } .m-next { right: 10px; }
+
+        #h-consejo { transition: opacity 0.3s ease-in-out; }
     </style>
 </head>
 <body onkeydown="if(event.key === 'Enter') login()">
 
 <div id="texture-bg"></div>
 
+<div id="modal-misiones">
+    <div class="modal-content" id="mision-modal-content">
+        <div class="modal-header" id="mision-modal-header">
+            MISIONES <span id="mision-title"></span>
+            <span class="modal-close" onclick="closeMisiones()">✖</span>
+        </div>
+        <div class="modal-body" id="mision-list-container"></div>
+    </div>
+</div>
+
+<div id="modal-logros">
+    <div class="modal-content">
+        <div class="modal-header">
+            LOGROS DEL MES KiDOM
+            <span class="modal-close" onclick="closeModal()">✖</span>
+        </div>
+        <div class="modal-body">
+            <button id="btn-m-prev" class="modal-btn m-prev" onclick="changeSlide(-1)">❮</button>
+            <div id="modal-img-container"></div>
+            <button id="btn-m-next" class="modal-btn m-next" onclick="changeSlide(1)">❯</button>
+        </div>
+    </div>
+</div>
+
+<div class="coins-container" id="kidom-coins">
+    <div class="btn-kc kc-yellow" onclick="openMisiones(1)"><img src="https://i.imgur.com/HuH7bZo.png"></div>
+    <div class="btn-kc kc-green" onclick="openMisiones(2)"><img src="https://i.imgur.com/4Qzt3J2.png"></div>
+    <div class="btn-kc kc-blue" onclick="openMisiones(5)"><img src="https://i.imgur.com/NvOp2UY.png"></div>
+    <div class="btn-kc kc-orange" onclick="openMisiones(10)"><img src="https://i.imgur.com/KbTtDHd.png"></div>
+</div>
+
 <div id="logout-btn" class="logout-floating" onclick="location.reload()" title="Cerrar Sesión">
     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
 </div>
 
 <div id="chat-bubble" onclick="toggleChat()">
-    <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+    <img src="https://i.imgur.com/jO9NxAQ.png" alt="Coach KiDOM">
 </div>
 
 <div id="chat-window">
@@ -146,7 +237,7 @@
         <div class="msg msg-coach">¡Hola! Soy tu Coach KiDOM. ¿En qué puedo ayudarte hoy con el desarrollo de tu pequeño?</div>
     </div>
     <div class="chat-input-area">
-        <input type="text" id="chat-input-text" class="chat-input" placeholder="Escribe tu duda aquí..." onkeydown="if(event.key==='Enter') sendToCoach()">
+        <input type="text" id="chat-input-text" class="chat-input" placeholder="Escribe tu duda aquí...">
         <button class="btn-send" onclick="sendToCoach()">></button>
     </div>
 </div>
@@ -200,6 +291,9 @@
                         <img id="h-foto" src="" class="h-foto">
                         <h2 id="h-nombre" style="margin:2px 0; font-size:18px; text-transform:uppercase; text-align:center;"></h2>
                         <div style="text-align:center; margin-top: 5px;">
+                            <small style="font-weight:800; color:var(--gray-lider); font-size:9px; display:block;">GRUPO KiDOM</small>
+                            <div id="h-grupo" style="font-size:13px; font-weight:900; color:var(--blue); text-transform:uppercase; margin-bottom: 5px;">-</div>
+                            
                             <small style="font-weight:800; color:var(--gray-lider); font-size:9px; display:block;">PRÓXIMA SESIÓN</small>
                             <span id="h-next" style="font-size:11px; font-weight:900; color:var(--dark);">CONSULTAR EN ADMIN</span>
                         </div>
@@ -210,7 +304,7 @@
                             </div>
                             <div class="progress-container"><div id="h-progress" class="progress-bar"></div></div>
                         </div>
-                        <button class="btn-logros" onclick="alert('¡Próximamente! Aquí verás los mejores momentos de tu hijo.')">⭐ Ver Logros del Mes</button>
+                        <button class="btn-logros" onclick="openLogros()">⭐ Ver Logros del Mes</button>
                     </div>
                 </div>
 
@@ -275,11 +369,8 @@
 </div>
 
 <script>
-    const URL_APP = "https://script.google.com/macros/s/AKfycbxVTIOoLemEV1qbChbtOEGiVrJzwg2H0YkUGWwfO4qBVRNWXlkbI19_vDug5Tnpj-0Sgg/exec";
+    const URL_APP = "https://script.google.com/macros/s/AKfycbzuMFIWePTRMB379gXe-yAJYW-sJ0bOIMBL4KyHXvRpQs80NnuaLZcE41Onu33iDTm10A/exec";
     
-    // PEGA TU API KEY AQUÍ
-    const API_KEY = "AIzaSyDXe1NW32GWbAEjOsEk4xO99H8BEjbofNg"; 
-
     const linksPayphone = {
         "Pro": { "Mensual": "https://ppls.me/b44zrugmq1z5Ky7BUUlUSA", "Trimestral": "https://ppls.me/KctvYvSveLfgkb0ndKGHdA", "Anual": "https://ppls.me/rNl2eyvUdLnjUJ4izZROQ" },
         "Max": { "Mensual": "https://ppls.me/wiFoBdprfMaW86rWtnTg", "Trimestral": "https://ppls.me/LG7470AR91A00W1fTtkwPg", "Anual": "https://ppls.me/FNk7HwsxFDRhIkwc7S9bQ" },
@@ -287,11 +378,34 @@
     };
 
     const consejos = [
-        { tema: "Autismo y Estructura", texto: "Para niños dentro del espectro, la previsibilidad reduce el estrés. Utiliza agendas visuales simples en casa para marcar el inicio y fin de cada actividad; esto fortalece su autonomía y mejora su disposición a aprender nuevas rutinas." },
-        { tema: "Liderazgo KiDOM", texto: "Un líder no es el que manda, sino el que sirve e inspira. En casa, asígnale la responsabilidad de ayudar en una tarea simple; sentirse útil y responsable es la semilla del liderazgo positivo." }
+        { tema: "Autismo y Estructura", texto: "Para niños dentro del espectro, la previsibilidad reduce el estrés. Utiliza agendas visuales simples en casa para marcar el inicio y fin de cada actividad; esto les da seguridad y reduce la ansiedad ante las transiciones." },
+        { tema: "Déficit de Atención", texto: "El cerebro con TDAH busca dopamina constante. Divide las tareas largas en 'mini-misiones' de 5 minutos y celebra cada una. El refuerzo positivo inmediato es la mejor herramienta para mantener su enfoque." },
+        { tema: "Liderazgo KiDOM", texto: "Un líder no es el que manda, sino el que sirve e inspira. En casa, asígnale la responsabilidad de cuidar una planta o ayudar a un hermano menor; esto fortalece su autoconcepto y sentido de propósito." },
+        { tema: "Desarrollo Motor", texto: "El movimiento es la base del pensamiento. Actividades de equilibrio y gateo funcional activan ambos hemisferios cerebrales, preparando el terreno para una mejor lectoescritura en el futuro." },
+        { tema: "Crianza Positiva", texto: "Valida la emoción, pero guía la conducta. Decir 'entiendo que estés enojado' conecta con su cerebro emocional antes de intentar razonar con el cerebro lógico, evitando desbordes innecesarios." }
     ];
 
+    // --- MISIONES DINÁMICAS POR GRUPO ---
+    const misionesPorGrupo = {
+        "EXPLORADORES": {
+            1: ["Completar la primera sesión de diagnóstico.","Participar en la afirmación KiDOM con energía.","Llegar a tiempo y listo para la clase.","Completar el calentamiento sin distraerse","Se gana 1 KC por cada 2 clases asistidas.","Completar una clase entera recordando la regla de no empujar.","Seguir una instrucción de 2 pasos del coach a la primera.","Esperar turno pacientemente.","Probar una actividad completamente nueva sin dudar.","Ayudar a guardar 3 piezas de equipo sin que se lo pidan.","No interrumpir al coach.","Atarse los cordones o ponerse los zapatos sin ayuda.","Levantar la mano para hablar.","Ser el primero en la fila y guiar al grupo.","Escuchar con atención.","Recordar una de las reglas de la clase.","Devolver el equipo al lugar correcto.","Mantener contacto visual.","Permanecer en su sitio."],
+            2: ["Recordar y ejecutar la secuencia de calentamiento sin ayuda.","Celebrar el éxito de un compañero.","Expresar sentimientos en lugar de rendirse.","Intentar un reto 3 veces antes de pedir ayuda.","Animar a un compañero.","Usar la frase 'todavía no puedo'.","Proponer una solución a un desacuerdo.","Cruzar viga de equilibrio sin ayuda.","Trepar la cuerda hasta la mitad.","Crear y narrar una mini-historia.","Completar un patrón de 3 movimientos.","Mantener concentración por 5 min.","Nombrar 3 alimentos saludables.","Invitar a un compañero a jugar.","Ser el 'Ayudante del Coach'.","Completar circuito sin saltarse estaciones.","Escuchar historia de cierre."],
+            5: ["Tarea en casa: guardar juguetes 3 días.","Tarea en casa: probar comida nueva.","Completar con éxito el Hito del Mes.","Invitar a un niño solo a unirse al juego.","Publicaciones en RRSS/WhatsApp sobre un logro.","Recomendar a un amigo que se inscribe."],
+            10: ["Tarea en casa: cumplir hora de dormir 4 noches + buena energía."]
+        },
+        "LIDERES": {
+            1: ["Completar la primera sesión de diagnóstico.","Recordar y nombrar los 5 valores del Código L.I.D.E.R.","Ser el primero en ayudar a guardar el material.","Estar listo para empezar la clase en el momento exacto.","Se gana 1 KC por cada 2 clases asistidas.","Ofrecer ayuda a un compañero sin que se lo pidan.","Animar a su equipo incluso cuando van perdiendo.","Admitir honestamente un error.","Dar bienvenida a nuevo miembro.","Usar equipo con cuidado.","Agradecer al coach al final de la clase.","Escuchar atentamente mientras otros hablan.","Dar una instrucción clara y audible a un compañero.","Mantener una postura atenta durante las explicaciones.","Completar cada repetición de un ejercicio con la mejor forma posible.","Respeto al espacio personal de los compañeros.","Moverse de una actividad de forma rápida y ordenada.","Levantar la mano para hablar o preguntar.","Empezar a estirar o calentar por iniciativa propia.","Mantener contacto visual con el coach.","Tener sus pertenencias listas y ordenadas.","Admitir honestamente cuando ha sido tocado en un juego."],
+            2: ["Liderar al grupo durante el calentamiento.","Explicar el rol de cada miembro en un equipo.","Proponer una estrategia válida durante un reto.","Darle feedback constructivo a un compañero.","Crear un plan de acción de 3 pasos para un reto.","Analizar un fracaso y proponer mejoras.","Practicar una habilidad difícil por 10 min.","Completar un registro de práctica semanal.","Ayudar a un compañero a lograr una meta.","Presentar una idea al grupo por 1 min.","Resumir la idea de un compañero.","Definir una meta personal y 3 pasos.","Entrevistar a un adulto sobre un fracaso.","Liderar un mini-proyecto de equipo.","Establecer una meta para el próximo año.","Completar circuito sin saltarse estaciones.","Escuchar historia de cierre."],
+            5: ["Tarea en casa (mochila 3 días) + organizar equipo KiDOM.","Por completar con éxito el Hito del Mes.","Asignar roles a los miembros para un desafío.","Intervenir y proponer solución en un conflicto.","Publicaciones en RRSS/WhatsApp sobre un logro.","Recomendar a un amigo que se inscribe."],
+            10: ["Tarea en casa (analizar video deportista) + analizar compañero KiDOM."]
+        }
+    };
+
     let ninos = []; let usuarios = [];
+    let slideImages = [];
+    let currentSlide = 0;
+    let activeChild = null;
+    let misionesCompletadas = [];
 
     async function init() {
         try {
@@ -301,7 +415,10 @@
             ]);
             ninos = resN; usuarios = resU;
             const sel = document.getElementById('reg-hijo'); sel.innerHTML = '<option value="">SELECCIONA A TU HIJO...</option>';
-            ninos.forEach(n => { sel.innerHTML += `<option value="${n.nombre}">${n.nombre}</option>`; });
+            ninos.forEach(n => { 
+                const nombre = n.nombre || n.Nombre_Niño;
+                if(nombre) sel.innerHTML += `<option value="${nombre}">${nombre}</option>`; 
+            });
         } catch(e) { console.error("Error cargando datos."); }
     }
     init();
@@ -309,10 +426,19 @@
     async function login() {
         const uInput = document.getElementById('log-user').value.trim();
         const pInput = document.getElementById('log-pass').value.trim();
-        const uFound = usuarios.find(u => u.cedula.toString().toLowerCase() === uInput.toLowerCase() && u.pass.toString() === pInput);
+        const uFound = usuarios.find(u => u.cedula.toString() === uInput && u.pass.toString() === pInput);
+        
         if(uFound) {
-            const h = ninos.find(n => n.nombre === uFound.hijo);
+            const h = ninos.find(n => {
+                const nombreExcel = (n.nombre || "").toString().toLowerCase().trim();
+                const nombreUsuario = uFound.hijo.toString().toLowerCase().trim();
+                return nombreExcel.includes(nombreUsuario);
+            });
+            
             if(h) {
+                activeChild = h;
+                misionesCompletadas = h.misiones ? h.misiones.toString().split(",") : [];
+
                 const overlay = document.getElementById('login-overlay');
                 overlay.style.transform = "scale(1.5)"; overlay.style.opacity = "0";
                 setTimeout(() => {
@@ -320,21 +446,119 @@
                     document.getElementById('parent-app').style.display = 'flex';
                     document.getElementById('logout-btn').style.display = 'flex';
                     document.getElementById('chat-bubble').style.display = 'flex';
+                    document.getElementById('kidom-coins').style.display = 'flex';
                     document.getElementById('texture-bg').style.display = 'block';
                 }, 600);
-                document.getElementById('h-foto').src = h.foto || 'https://via.placeholder.com/140';
+                
+                document.getElementById('h-foto').src = h.foto || '';
                 document.getElementById('h-nombre').innerText = h.nombre;
                 document.getElementById('h-clases').innerText = h.sesiones || "0";
-                document.getElementById('h-next').innerText = h.horarios || "CONSULTAR CON ADMIN";
+                document.getElementById('h-grupo').innerText = h.grupo || "SIN ASIGNAR";
+
+                let rawHorario = (h.horario || "").toString().toUpperCase();
+                const diasMap = { "LUN": "LUNES", "MAR": "MARTES", "MIE": "MIÉRCOLES", "JUE": "JUEVES", "VIE": "VIERNES", "SAB": "SÁBADO" };
+                for (let clave in diasMap) { if (rawHorario.includes(clave)) rawHorario = rawHorario.replace(clave, diasMap[clave] + " - "); }
+                rawHorario = rawHorario.replace(/(\d+)H/, "$1H00PM");
+                document.getElementById('h-next').innerText = rawHorario || "CONSULTAR ADMIN";
+                
                 let numClases = parseInt(h.sesiones) || 0;
                 let porcentaje = ((12 - numClases) / 12) * 100;
-                document.getElementById('h-progress').style.width = Math.min(Math.max(porcentaje, 0), 100) + "%";
-                const randomTip = consejos[Math.floor(Math.random() * consejos.length)];
-                document.getElementById('tip-title').innerText = "COACH: " + randomTip.tema;
-                document.getElementById('h-consejo').innerText = randomTip.texto;
+                let pBar = document.getElementById('h-progress');
+                pBar.style.width = Math.min(Math.max(porcentaje, 0), 100) + "%";
+                if (numClases >= 6) pBar.style.backgroundColor = "var(--green-wa)";
+                else if (numClases >= 3) pBar.style.backgroundColor = "var(--yellow)";
+                else pBar.style.backgroundColor = "var(--red)";
+
+                actualizarConsejo();
+                setInterval(actualizarConsejo, 60000);
+
+                slideImages = h.logros ? h.logros.split(',').map(s => s.trim()) : [];
                 calc();
-            }
-        } else { alert("Nombre o contraseña incorrectos."); }
+            } else { alert("Hijo no vinculado."); }
+        } else { alert("Datos incorrectos."); }
+    }
+
+    function actualizarConsejo() {
+        const randomTip = consejos[Math.floor(Math.random() * consejos.length)];
+        const titulo = document.getElementById('tip-title');
+        const contenido = document.getElementById('h-consejo');
+        if(titulo && contenido) {
+            contenido.style.opacity = "0";
+            setTimeout(() => {
+                titulo.innerText = "COACH: " + randomTip.tema;
+                contenido.innerText = randomTip.texto;
+                contenido.style.opacity = "1";
+            }, 300);
+        }
+    }
+
+    function openMisiones(kc) {
+        const grupoKey = activeChild.grupo.toUpperCase();
+        const misiones = misionesPorGrupo[grupoKey] ? misionesPorGrupo[grupoKey][kc] : [];
+        const colorMap = { 1: "var(--yellow)", 2: "var(--green-wa)", 5: "var(--blue)", 10: "var(--orange)" };
+        const colorOficial = colorMap[kc];
+
+        const modalContent = document.getElementById('mision-modal-content');
+        const modalHeader = document.getElementById('mision-modal-header');
+        modalContent.style.borderColor = colorOficial;
+        modalHeader.style.backgroundColor = colorOficial;
+        modalHeader.style.color = (kc === 1) ? "var(--dark)" : "white";
+
+        document.getElementById('mision-title').innerText = kc + " KC";
+        const container = document.getElementById('mision-list-container');
+        container.innerHTML = '';
+        
+        if (misiones.length === 0) {
+            container.innerHTML = '<p style="text-align:center; font-size:12px;">No hay misiones configuradas para este grupo.</p>';
+        } else {
+            misiones.forEach((m, index) => {
+                const idUnico = `${grupoKey}_${kc}KC_${index}`;
+                const yaHecho = misionesCompletadas.includes(idUnico);
+                container.innerHTML += `
+                    <div class="mision-item">
+                        <div class="mision-text">${m}</div>
+                        <button class="btn-cumplido ${yaHecho ? 'active' : ''}" 
+                                style="${yaHecho ? 'background:' + colorOficial + '; color:' + (kc === 1 ? 'var(--dark)' : 'white') : ''}"
+                                data-id="${idUnico}" data-color="${colorOficial}"
+                                onclick="marcarCumplido(this, ${kc})">
+                            ${yaHecho ? '✓ LOGRADO' : 'CUMPLIDO'}
+                        </button>
+                    </div>`;
+            });
+        }
+        document.getElementById('modal-misiones').style.display = 'flex';
+    }
+
+    async function marcarCumplido(btn, kc) {
+        if(btn.classList.contains('active')) return;
+        const idUnico = btn.getAttribute('data-id');
+        const color = btn.getAttribute('data-color');
+        btn.classList.add('active');
+        btn.style.background = color;
+        btn.style.color = (kc === 1) ? "var(--dark)" : "white";
+        btn.innerText = "✓ LOGRADO";
+        misionesCompletadas.push(idUnico);
+        fetch(`${URL_APP}?action=marcarMision&hijo=${encodeURIComponent(activeChild.nombre)}&misionId=${idUnico}`);
+    }
+
+    function closeMisiones() { document.getElementById('modal-misiones').style.display = 'none'; }
+
+    function openLogros() {
+        if (slideImages.length === 0) { alert("¡Estamos preparando tus fotos! 📸"); return; }
+        const container = document.getElementById('modal-img-container');
+        container.innerHTML = slideImages.map((url, i) => `<img src="${url}" class="modal-img ${i === 0 ? 'active' : ''}">`).join('');
+        document.getElementById('modal-logros').style.display = 'flex';
+        currentSlide = 0;
+    }
+
+    function closeModal() { document.getElementById('modal-logros').style.display = 'none'; }
+
+    function changeSlide(step) {
+        const slides = document.querySelectorAll('.modal-img');
+        if (slides.length <= 1) return;
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + step + slides.length) % slides.length;
+        slides[currentSlide].classList.add('active');
     }
 
     function toggleChat() {
@@ -345,31 +569,17 @@
     async function sendToCoach() {
         const input = document.getElementById('chat-input-text');
         const text = input.value.trim();
-        if(!text) return;
-
+        if (!text) return;
         const container = document.getElementById('chat-msgs');
         container.innerHTML += `<div class="msg msg-user">${text}</div>`;
         input.value = "";
-        
         const loadingId = "load-" + Date.now();
-        container.innerHTML += `<div class="msg msg-coach" id="${loadingId}">Analizando...</div>`;
+        container.innerHTML += `<div class="msg msg-coach" id="${loadingId}">...</div>`;
         container.scrollTop = container.scrollHeight;
-
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: "Eres el Coach Virtual de KiDOM, experto en neurodesarrollo. Da consejos breves y empáticos sobre: " + text }] }]
-                })
-            });
-
-            const data = await response.json();
-            const aiRes = data.candidates[0].content.parts[0].text;
-            document.getElementById(loadingId).innerText = aiRes;
-        } catch (error) {
-            document.getElementById(loadingId).innerText = "No disponible actualmente.";
-        }
+            const response = await fetch(URL_APP, { method: "POST", body: JSON.stringify({ prompt: text }) });
+            document.getElementById(loadingId).innerText = await response.text();
+        } catch (error) { document.getElementById(loadingId).innerText = "Error."; }
         container.scrollTop = container.scrollHeight;
     }
 
@@ -378,11 +588,10 @@
         const precios = { Pro: { Mensual: 65, Trimestral: 180, Anual: 650 }, Max: { Mensual: 85, Trimestral: 240, Anual: 850 }, Elite: { Mensual: 115, Trimestral: 320, Anual: 1150 } };
         let base = precios[p][d];
         document.getElementById('p-banco').style.display = (m === 'Transferencia') ? 'block' : 'none';
-        document.getElementById('p-banco').nextElementSibling.style.display = (m === 'Transferencia') ? 'block' : 'none';
         document.getElementById('btn-payphone').style.display = (m === 'Tarjeta de Crédito (Payphone)') ? 'block' : 'none';
         document.getElementById('row-payphone').style.display = (m === 'Tarjeta de Crédito (Payphone)') ? 'flex' : 'none';
         let subtotal = base / 1.15, iva = base - subtotal, total = base;
-        if(m === 'Tarjeta de Crédito (Payphone)') { let recargo = base * 0.06; total += recargo; }
+        if(m === 'Tarjeta de Crédito (Payphone)') { let r = base * 0.06; total += r; document.getElementById('txt-pay').innerText = `$${r.toFixed(2)}`; }
         document.getElementById('txt-sub').innerText = `$${subtotal.toFixed(2)}`;
         document.getElementById('txt-iva').innerText = `$${iva.toFixed(2)}`;
         document.getElementById('res-tot').innerText = `$${total.toFixed(2)}`;
@@ -390,26 +599,22 @@
 
     function showBankDetails() {
         const b = document.getElementById('p-banco').value, info = document.getElementById('bank-info');
-        const tit = "Misael Carrion | CI: 0105737324";
-        if(b === 'Pichincha') info.innerHTML = `<b>BANCO PICHINCHA</b><br>${tit}<br>Cuenta: 2201732707`;
-        else if(b === 'Azuayo') info.innerHTML = `<b>BANCO DEL AZUAYO</b><br>${tit}<br>Cuenta: 2497049`;
-        else if(b === 'Guayaquil') info.innerHTML = `<b>BANCO GUAYAQUIL</b><br>${tit}<br>Cuenta: 0041113061`;
-        else if(b === 'Pacifico') info.innerHTML = `<b>BANCO DEL PACIFICO</b><br>${tit}<br>Cuenta: 1047648316`;
+        if(b === 'Pichincha') info.innerHTML = `<b>BANCO PICHINCHA</b><br>Misael Carrion | CI: 0105737324<br>Cuenta: 2201732707`;
+        else if(b === 'Azuayo') info.innerHTML = `<b>BANCO DEL AZUAYO</b><br>Misael Carrion | CI: 0105737324<br>Cuenta: 2497049`;
         else info.innerHTML = "";
+        info.style.display = b ? 'block' : 'none';
     }
 
     function payWithPayphone() {
         const p = document.getElementById('p-plan').value, d = document.getElementById('p-dur').value;
-        const link = linksPayphone[p][d];
-        if(link) window.open(link, '_blank');
-        else alert("Link no disponible.");
+        window.open(linksPayphone[p][d], '_blank');
     }
 
     async function registrar() {
         const h = document.getElementById('reg-hijo').value, u = document.getElementById('reg-user').value.trim(), p = document.getElementById('reg-pass').value.trim();
         if(!h || !u || !p) return alert("Completa los datos");
         await fetch(`${URL_APP}?action=registrarPadre&hijo=${encodeURIComponent(h)}&cedula=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}`, { mode: 'no-cors' });
-        alert("¡Registro exitoso! Ya puedes entrar."); location.reload();
+        alert("¡Registro exitoso!"); location.reload();
     }
     function toggleAuth(r) { document.getElementById('div-login').style.display = r?'none':'block'; document.getElementById('div-reg').style.display = r?'block':'none'; }
 </script>
