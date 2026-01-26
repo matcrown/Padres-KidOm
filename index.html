@@ -191,26 +191,27 @@
 
         #h-consejo { transition: opacity 0.3s ease-in-out; }
 	@media (max-width: 768px) {
-            body { overflow-y: auto; } 
-            #parent-app { height: auto; overflow-y: visible; }
-            .scroll-area { overflow-y: visible; padding: 10px; }
-            .row-flex { flex-direction: column !important; gap: 15px; }
-            .wrapper-card { width: 100% !important; padding: 0; }
+            /* Forzamos a que todo en el área de scroll vaya uno debajo de otro */
+            .scroll-area { 
+                display: flex !important;
+                flex-direction: column !important; 
+                align-items: center !important; 
+                overflow-y: auto !important; 
+                padding: 10px !important; 
+            }
 
-            /* Esto quita el efecto "flotante" arriba y las pone en su sitio */
-            /* --- LAS MONEDAS BAJAN DE FORMA OBLIGATORIA --- */
+            /* Monedas centradas y ocupando el ancho para que nada se le ponga al lado */
             .coins-container { 
-                position: relative !important; /* Cambiamos a relative para que respete el flujo */
-                top: auto !important; /* Anula los 130px de arriba */
-                left: auto !important;
+                position: relative !important; 
                 display: flex !important; 
                 flex-direction: row !important; 
                 justify-content: center !important; 
                 width: 100% !important; 
-                padding: 10px 0 !important; 
-                gap: 12px !important; 
-                margin-top: 10px !important; /* Espacio después de la marquesina */
-                z-index: 10 !important;
+                top: auto !important;
+                left: auto !important;
+                padding: 15px 0 !important; 
+                gap: 15px !important;
+                margin: 0 0 10px 0 !important; /* Espacio abajo para no pegar a la tarjeta */
             }
             .btn-kc { width: 50px; height: 50px; }
             .kidom-card { padding: 20px; border-radius: 30px; }
