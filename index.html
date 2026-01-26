@@ -195,33 +195,37 @@
             body { overflow-y: auto !important; } 
             #parent-app { height: auto !important; overflow-y: visible !important; }
             
-            /* Contenedor principal: monedas arriba y tarjetas abajo */
             .scroll-area { 
                 display: flex !important;
                 flex-direction: column !important; 
                 align-items: center !important; 
-                padding: 10px !important;
-                overflow-x: hidden !important; /* Evita el scroll lateral */
+                padding: 10px 20px !important; 
+                overflow-x: hidden !important;
+                box-sizing: border-box !important;
             }
             
-            /* Forzamos a que el contenedor de tarjetas sea vertical */
             .grid-container { 
                 display: flex !important;
                 flex-direction: column !important;
                 width: 100% !important;
                 gap: 20px !important;
+                align-items: center !important;
             }
 
             .row-flex { 
-                flex-direction: column !important; /* ESTO ES LO QUE TE FALTABA */
+                flex-direction: column !important;
                 width: 100% !important;
                 gap: 20px !important; 
+                align-items: center !important;
             }
             
             .wrapper-card { 
-                width: 100% !important; 
+                width: 92% !important; 
+                max-width: 340px !important;
                 padding: 0 !important;
+                margin: 0 auto !important;
             }
+            /* ... el resto de las monedas y botones sigue igual ... */
 
             /* Monedas centradas arriba de la tarjeta */
             .coins-container { 
