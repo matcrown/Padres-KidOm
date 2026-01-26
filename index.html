@@ -272,7 +272,7 @@
     </div>
 </div>
 
-<div id="logout-btn" class="logout-floating" onclick="location.reload()" title="Cerrar Sesión">
+<div id="logout-btn" class="logout-floating" onclick="localStorage.clear(); location.reload();" title="Cerrar Sesión">
     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
 </div>
 
@@ -447,16 +447,16 @@
 
     const misionesPorGrupo = {
         "EXPLORADORES": {
-            1: ["Completar la primera sesión de diagnóstico.","Participar en la afirmación KiDOM con energía.","Llegar a tiempo y listo para la clase.","Completar el calentamiento sin distraerse","Se gana 1 KC por cada 2 clases asistidas.","Completar una clase entera recordando la regla de no empujar.","Seguir una instrucción de 2 pasos del coach a la primera.","Esperar turno pacientemente.","Probar una actividad completamente nueva sin dudar.","Ayudar a guardar 3 piezas de equipo sin que se lo pidan.","No interrumpir al coach.","Atarse los cordones o ponerse los zapatos sin ayuda.","Levantar la mano para hablar.","Ser el primero en la fila y guiar al grupo.","Escuchar con atención.","Recordar una de las reglas de la clase.","Devolver el equipo al lugar correcto.","Mantener contacto visual.","Permanecer en su sitio."],
-            2: ["Recordar y ejecutar la secuencia de calentamiento sin ayuda.","Celebrar el éxito de un compañero.","Expresar sentimientos en lugar de rendirse.","Intentar un reto 3 veces antes de pedir ayuda.","Animar a un compañero.","Usar la frase 'todavía no puedo'.","Proponer una solución a un desacuerdo.","Cruzar viga de equilibrio sin ayuda.","Trepar la cuerda hasta la mitad.","Crear y narrar una mini-historia.","Completar un patrón de 3 movimientos.","Mantener concentración por 5 min.","Nombrar 3 alimentos saludables.","Invitar a un compañero a jugar.","Ser el 'Ayudante del Coach'.","Completar circuito sin saltarse estaciones.","Escuchar historia de cierre."],
-            5: ["Tarea en casa: guardar juguetes 3 días.","Tarea en casa: probar comida nueva.","Completar con éxito el Hito del Mes.","Invitar a un niño solo a unirse al juego.","Publicaciones en RRSS/WhatsApp sobre un logro.","Recomendar a un amigo que se inscribe."],
-            10: ["Tarea en casa: cumplir hora de dormir 4 noches + buena energía."]
+            1: ["1. Completar la primera sesión de diagnóstico.","2. Participar en la afirmación KiDOM con energía.","3. Llegar a tiempo y listo para la clase.","4. Completar el calentamiento sin distraerse","6. Se gana 1 KC por cada 2 clases asistidas.","7. Completar una clase entera recordando la regla de no empujar.","9. Seguir una instrucción de 2 pasos del coach a la primera.","10. Se gana 1 KC por cada 2 clases asistidas.","11. Esperar turno pacientemente.","13. Probar una actividad completamente nueva sin dudar.","15. Se gana 1 KC por cada 2 clases asistidas.","16. Ayudar a guardar 3 piezas de equipo sin que se lo pidan.","18. No interrumpir al coach.","20. Se gana 1 KC por cada 2 clases asistidas.","23. Atarse los cordones o ponerse los zapatos sin ayuda.","25. Se gana 1 KC por cada 2 clases asistidas.","28. Levantar la mano para hablar.","30. Se gana 1 KC por cada 2 clases asistidas.","33. Ser el primero en la fila y guiar al grupo.","35. Se gana 1 KC por cada 2 clases asistidas.","38. Escuchar con atención.","40. Se gana 1 KC por cada 2 clases asistidas.","42. Recordar una de las reglas de la clase.","44. Se gana 1 KC por cada 2 clases asistidas.","46. Devolver el equipo al lugar correcto.","48. Se gana 1 KC por cada 2 clases asistidas.","49. Mantener contacto visual.","50. Permanecer en su sitio."],
+            2: ["5. Recordar y ejecutar la secuencia de calentamiento sin ayuda.","8. Celebrar el éxito de un compañero.","12. Expresar con palabras porque se siente frustrado en lugar de rendirse.","14. Intentar un reto 3 veces antes de pedir ayuda.","17. Animar a un compañero que esta teniendo dificultades.","19. Usar la frase 'todavía no puedo'.","22. Proponer una solución a un desacuerdo.","24. Cruzar viga de equilibrio sin ayuda.","27. Trepar la cuerda hasta la mitad.","31. Crear y narrar una mini-historia.","34. Completar un patrón de 3 movimientos.","37. Mantener concentración en un reto por 5 minutos.","41. Nombrar 3 alimentos saludables.","43. Invitar a un compañero a jugar.","45. Ser el 'Ayudante del Coach por un dia'.","47. Completar circuito sin saltarse estaciones.","51. Escuchar historia de cierre."],
+            5: ["21. Tarea en casa: guardar juguetes 3 días y liderar el orden en KidOm (x5).","26.Tarea en casa: probar comida nueva y demostrar energia en KidOm (x5).","29.Completar con éxito el Hito del Mes (x5).","32. Invitar activamente a un niño que esta solo a unirse al juego (x5).","36. 2 Publicaciones en RRSS/ o 4 por WhatsApp sobre un logro (x5).","39. Recomendar a un amigo que se inscriba (x5)."],
+            10: ["Tarea en casa: cumplir hora de dormir 4 noches y mostrar buena energía en KidOm."]
         },
         "LIDERES": {
-            1: ["Completar la primera sesión de diagnóstico.","Recordar y nombrar los 5 valores del Código L.I.D.E.R.","Ser el primero en ayudar a guardar el material.","Estar listo para empezar la clase en el momento exacto.","Se gana 1 KC por cada 2 clases asistidas.","Ofrecer ayuda a un compañero sin que se lo pidan.","Animar a su equipo incluso cuando van perdiendo.","Admitir honestamente un error.","Dar bienvenida a nuevo miembro.","Usar equipo con cuidado.","Agradecer al coach al final de la clase.","Escuchar atentamente mientras otros hablan.","Dar una instrucción clara y audible a un compañero.","Mantener una postura atenta durante las explicaciones.","Completar cada repetición de un ejercicio con la mejor forma posible.","Respeto al espacio personal de los compañeros.","Moverse de una actividad de forma rápida y ordenada.","Levantar la mano para hablar o preguntar.","Empezar a estirar o calentar por iniciativa propia.","Mantener contacto visual con el coach.","Tener sus pertenencias listas y ordenadas.","Admitir honestamente cuando ha sido tocado en un juego."],
-            2: ["Liderar al grupo durante el calentamiento.","Explicar el rol de cada miembro en un equipo.","Proponer una estrategia válida durante un reto.","Darle feedback constructivo a un compañero.","Crear un plan de acción de 3 pasos para un reto.","Analizar un fracaso y proponer mejoras.","Practicar una habilidad difícil por 10 min.","Completar un registro de práctica semanal.","Ayudar a un compañero a lograr una meta.","Presentar una idea al grupo por 1 min.","Resumir la idea de un compañero.","Definir una meta personal y 3 pasos.","Entrevistar a un adulto sobre un fracaso.","Liderar un mini-proyecto de equipo.","Establecer una meta para el próximo año.","Completar circuito sin saltarse estaciones.","Escuchar historia de cierre."],
-            5: ["Tarea en casa (mochila 3 días) + organizar equipo KiDOM.","Por completar con éxito el Hito del Mes.","Asignar roles a los miembros para un desafío.","Intervenir y proponer solución en un conflicto.","Publicaciones en RRSS/WhatsApp sobre un logro.","Recomendar a un amigo que se inscribe."],
-            10: ["Tarea en casa (analizar video deportista) + analizar compañero KiDOM."]
+            1: ["1. Completar la primera sesión de diagnóstico.","2. Recordar y nombrar los 5 valores del Código L.I.D.E.R.","3. Ser el primero en ayudar a guardar el material.","4. Estar listo para empezar la clase en el momento exacto.","6. Se gana 1 KC por cada 2 clases asistidas.","7. Ofrecer ayuda a un compañero sin que se lo pidan.","9. Animar a su equipo incluso cuando van perdiendo.","10. Se gana 1 KC por cada dos clases asistidas.","11. Admitir honestamente un error.","13. Dar bienvenida a nuevo miembro.","15. Se gana 1 KC por cada dos clases asistidas.","16. Usar equipo con cuidado.","18. Agradecer al coach al final de la clase.","20. Se gana 1 KC por cada dos clases asistidas.","23. Escuchar atentamente mientras otros hablan.","25. Se gana 1 KC por cada dos clases asistidas.","28. Dar una instrucción clara y audible a un nuevo compañero.","30. Se gana 1 KC por cada dos clases asistidas.","33. Mantener una postura atenta durante las explicaciones.","35. Se gana 1 KC por cada dos clases asistidas.","38. Completar cada repetición de un ejercicio con la mejor forma posible.","40. Se gana 1 KC por cada dos clases asistidas.","42. Respeto al espacio personal de los compañeros.","44. Se gana 1 KC por cada dos clases asistidas.","46. Moverse de una actividad de forma rápida y ordenada.","47 Levantar la mano para hablar o preguntar.","48. Empezar a estirar o calentar por iniciativa propia.","49. Mantener contacto visual con el coach.","50. Tener sus pertenencias listas y ordenadas.","51. Admitir honestamente cuando ha sido tocado en un juego."],
+            2: ["5. Liderar al grupo durante el calentamiento.","8. Explicar el rol de cada miembro en un equipo.","12. Proponer una estrategia válida durante un reto.","14. Darle feedback constructivo a un compañero.","17. Crear un plan de acción de 3 pasos para un reto.","19. Analizar un fracaso y proponer mejoras.","22. Practicar una habilidad difícil por 10 min.","24. Completar un registro de práctica semanal.","27. Ayudar a un compañero a lograr una meta.","31. Presentar una idea al grupo por 1 min.","34. Resumir la idea de un compañero.","37. Definir una meta personal y 3 pasos.","41. Entrevistar a un adulto sobre un fracaso.","43. Liderar un mini-proyecto de equipo.","45. Establecer una meta para el próximo año."],
+            5: ["21. Tarea en casa (organizar mochila por 3 días) y organizar equipo en KidOm (x5).","26. Por completar con éxito el Hito del Mes(x5).","29. Asignar roles a los miembros para un desafío (x5).","32. Intervenir y proponer solución en un conflicto(x5).","36. Publicaciones en RRSS/WhatsApp sobre un logro(x5).","39. Recomendar a un amigo que se inscribe (x5)."],
+            10: ["52. Tarea en casa (analizar video deportista) y analizar compañero en KiDOM."]
         }
     };
 
@@ -479,6 +479,14 @@
                 if(nombre) sel.innerHTML += `<option value="${nombre}">${nombre}</option>`; 
             });
         } catch(e) { console.error("Error cargando datos."); }
+// Revisar si hay sesión guardada
+            const savedUser = localStorage.getItem("kidom_user");
+            const savedPass = localStorage.getItem("kidom_pass");
+            if(savedUser && savedPass) {
+                document.getElementById('log-user').value = savedUser;
+                document.getElementById('log-pass').value = savedPass;
+                login(); // Entra automáticamente
+            }
     }
     init();
 
@@ -495,6 +503,8 @@
             });
             
             if(h) {
+		localStorage.setItem("kidom_user", uInput);
+                localStorage.setItem("kidom_pass", pInput);
                 activeChild = h;
                 misionesCompletadas = h.misiones ? h.misiones.toString().split(",") : [];
                 
