@@ -190,17 +190,40 @@
         .m-prev { left: 10px; } .m-next { right: 10px; }
 
         #h-consejo { transition: opacity 0.3s ease-in-out; }
-	@media (max-width: 768px) {
-            /* Forzamos a que todo en el área de scroll vaya uno debajo de otro */
+	/* --- ARREGLO DEFINITIVO PARA CELULAR (VISTA VERTICAL) --- */
+        @media (max-width: 768px) {
+            body { overflow-y: auto !important; } 
+            #parent-app { height: auto !important; overflow-y: visible !important; }
+            
+            /* Contenedor principal: monedas arriba y tarjetas abajo */
             .scroll-area { 
                 display: flex !important;
                 flex-direction: column !important; 
                 align-items: center !important; 
-                overflow-y: auto !important; 
-                padding: 10px !important; 
+                padding: 10px !important;
+                overflow-x: hidden !important; /* Evita el scroll lateral */
+            }
+            
+            /* Forzamos a que el contenedor de tarjetas sea vertical */
+            .grid-container { 
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+                gap: 20px !important;
             }
 
-            /* Monedas centradas y ocupando el ancho para que nada se le ponga al lado */
+            .row-flex { 
+                flex-direction: column !important; /* ESTO ES LO QUE TE FALTABA */
+                width: 100% !important;
+                gap: 20px !important; 
+            }
+            
+            .wrapper-card { 
+                width: 100% !important; 
+                padding: 0 !important;
+            }
+
+            /* Monedas centradas arriba de la tarjeta */
             .coins-container { 
                 position: relative !important; 
                 display: flex !important; 
@@ -211,10 +234,12 @@
                 left: auto !important;
                 padding: 15px 0 !important; 
                 gap: 15px !important;
-                margin: 0 0 10px 0 !important; /* Espacio abajo para no pegar a la tarjeta */
+                margin-bottom: 10px !important;
             }
-            .btn-kc { width: 50px; height: 50px; }
-            .kidom-card { padding: 20px; border-radius: 30px; }
+
+            .btn-kc { width: 55px; height: 55px; }
+            .kidom-card { padding: 20px; border-radius: 40px; }
+            .header { font-size: 18px; text-align: center; }
             .btn-wa-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
