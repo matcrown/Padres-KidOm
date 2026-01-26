@@ -198,14 +198,19 @@
             .wrapper-card { width: 100% !important; padding: 0; }
 
             /* Esto quita el efecto "flotante" arriba y las pone en su sitio */
+            /* --- LAS MONEDAS BAJAN DE FORMA OBLIGATORIA --- */
             .coins-container { 
-                position: static !important; 
+                position: relative !important; /* Cambiamos a relative para que respete el flujo */
+                top: auto !important; /* Anula los 130px de arriba */
+                left: auto !important;
                 display: flex !important; 
                 flex-direction: row !important; 
                 justify-content: center !important; 
                 width: 100% !important; 
-                padding: 15px 0 !important; 
+                padding: 10px 0 !important; 
                 gap: 12px !important; 
+                margin-top: 10px !important; /* Espacio después de la marquesina */
+                z-index: 10 !important;
             }
             .btn-kc { width: 50px; height: 50px; }
             .kidom-card { padding: 20px; border-radius: 30px; }
