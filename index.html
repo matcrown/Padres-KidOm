@@ -196,11 +196,16 @@
             .scroll-area { overflow-y: visible; padding: 10px; }
             .row-flex { flex-direction: column !important; gap: 15px; }
             .wrapper-card { width: 100% !important; padding: 0; }
+
+            /* Esto quita el efecto "flotante" arriba y las pone en su sitio */
             .coins-container { 
-                position: relative !important; top: 0 !important; left: 0 !important; 
-                display: flex !important; flex-direction: row !important; 
-                justify-content: center !important; width: 100% !important; 
-                padding: 15px 0; gap: 10px; order: -1; 
+                position: static !important; 
+                display: flex !important; 
+                flex-direction: row !important; 
+                justify-content: center !important; 
+                width: 100% !important; 
+                padding: 15px 0 !important; 
+                gap: 12px !important; 
             }
             .btn-kc { width: 50px; height: 50px; }
             .kidom-card { padding: 20px; border-radius: 30px; }
@@ -234,13 +239,6 @@
             <button id="btn-m-next" class="modal-btn m-next" onclick="changeSlide(1)">❯</button>
         </div>
     </div>
-</div>
-
-<div class="coins-container" id="kidom-coins">
-    <div class="btn-kc kc-yellow" onclick="openMisiones(1)"><img src="https://i.imgur.com/HuH7bZo.png"></div>
-    <div class="btn-kc kc-green" onclick="openMisiones(2)"><img src="https://i.imgur.com/4Qzt3J2.png"></div>
-    <div class="btn-kc kc-blue" onclick="openMisiones(5)"><img src="https://i.imgur.com/NvOp2UY.png"></div>
-    <div class="btn-kc kc-orange" onclick="openMisiones(10)"><img src="https://i.imgur.com/KbTtDHd.png"></div>
 </div>
 
 <div id="logout-btn" class="logout-floating" onclick="location.reload()" title="Cerrar Sesión">
@@ -304,6 +302,12 @@
     </div>
 
     <div class="scroll-area">
+<div class="coins-container" id="kidom-coins">
+    <div class="btn-kc kc-yellow" onclick="openMisiones(1)"><img src="https://i.imgur.com/HuH7bZo.png"></div>
+    <div class="btn-kc kc-green" onclick="openMisiones(2)"><img src="https://i.imgur.com/4Qzt3J2.png"></div>
+    <div class="btn-kc kc-blue" onclick="openMisiones(5)"><img src="https://i.imgur.com/NvOp2UY.png"></div>
+    <div class="btn-kc kc-orange" onclick="openMisiones(10)"><img src="https://i.imgur.com/KbTtDHd.png"></div>
+</div>
         <div class="grid-container">
             <div class="row-flex">
                 <div class="wrapper-card" style="width: 30%;"><div class="tack tack-tl"></div><div class="tack tack-tr"></div><div class="tack tack-bl"></div><div class="tack tack-br"></div>
