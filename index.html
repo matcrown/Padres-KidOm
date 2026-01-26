@@ -480,12 +480,13 @@
             });
         } catch(e) { console.error("Error cargando datos."); }
 // Revisar si hay sesión guardada
+            // Revisar si hay sesión guardada y esperar un segundo a que carguen los datos
             const savedUser = localStorage.getItem("kidom_user");
             const savedPass = localStorage.getItem("kidom_pass");
             if(savedUser && savedPass) {
                 document.getElementById('log-user').value = savedUser;
                 document.getElementById('log-pass').value = savedPass;
-                login(); // Entra automáticamente
+                setTimeout(login, 1000); // Espera 1 seg para asegurar que ninos[] ya tiene datos
             }
     }
     init();
@@ -503,9 +504,9 @@
             });
             
             if(h) {
+                activeChild = h;
 		localStorage.setItem("kidom_user", uInput);
                 localStorage.setItem("kidom_pass", pInput);
-                activeChild = h;
                 misionesCompletadas = h.misiones ? h.misiones.toString().split(",") : [];
                 
                 // Actualizar contador al entrar
