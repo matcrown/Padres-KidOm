@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>KiDOM Family - Portal de Padres</title>
-	<meta name="apple-mobile-web-app-capable" content="yes">
-    	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    	<meta name="apple-mobile-web-app-title" content="KiDOM Family">
-    	<link rel="apple-touch-icon" href="https://i.imgur.com/Y0d87u3.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="apple-mobile-web-app-title" content="KiDOM Family">
+        <link rel="apple-touch-icon" href="https://i.imgur.com/Y0d87u3.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -190,7 +190,7 @@
         .m-prev { left: 10px; } .m-next { right: 10px; }
 
         #h-consejo { transition: opacity 0.3s ease-in-out; }
-	/* --- ARREGLO DEFINITIVO PARA CELULAR (VISTA VERTICAL) --- */
+    /* --- ARREGLO DEFINITIVO PARA CELULAR (VISTA VERTICAL) --- */
         @media (max-width: 768px) {
             body { overflow-y: auto !important; } 
             #parent-app { height: auto !important; overflow-y: visible !important; }
@@ -311,17 +311,22 @@
     <div class="login-card">
         <img src="https://i.imgur.com/TffJPDG.png" width="160" style="margin-bottom: 25px;">
         <div id="div-login">
-            <input type="text" id="log-user" class="login-input" placeholder="NOMBRE Y APELLIDO">
+            <input type="text" id="log-user" class="login-input" placeholder="CORREO ELECTRÓNICO">
             <input type="password" id="log-pass" class="login-input" placeholder="CONTRASEÑA">
             <button class="btn-primary" onclick="login()">ENTRAR AL PORTAL</button>
             <button class="btn-reg-outline" onclick="toggleAuth(true)">REGISTRO NUEVO PADRE</button>
         </div>
         <div id="div-reg" style="display:none;">
-            <select id="reg-hijo" class="select-kidom"></select>
+            <input type="email" id="reg-hijo" class="login-input" placeholder="TU CORREO (EL DE REGISTRO)">
             <input type="text" id="reg-user" class="login-input" placeholder="TU NOMBRE Y APELLIDO">
             <input type="password" id="reg-pass" class="login-input" placeholder="CREA TU CONTRASEÑA">
             <button class="btn-primary" onclick="registrar()">CREAR ACCESO</button>
             <button class="btn-reg-outline" onclick="toggleAuth(false)" style="border-color:#64748b; color:#64748b;">VOLVER</button>
+        </div>
+        <div id="div-selector" style="display:none;">
+            <h3 style="font-size:14px; color:var(--blue); margin-bottom:15px; text-transform:uppercase;">¿A quién vamos a entrenar?</h3>
+            <div id="perfiles-container" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;"></div>
+            <button class="btn-reg-outline" onclick="location.reload()" style="margin-top:20px;">CERRAR SESIÓN</button>
         </div>
     </div>
 </div>
@@ -433,7 +438,7 @@
 </div>
 
 <script>
-    const URL_APP = "https://script.google.com/macros/s/AKfycbzuMFIWePTRMB379gXe-yAJYW-sJ0bOIMBL4KyHXvRpQs80NnuaLZcE41Onu33iDTm10A/exec";
+    const URL_APP = "https://script.google.com/macros/s/AKfycbw9sextcJvCpspUlMMX8poSzfjtRzN7YNToBgw95uDbEXUu8KqFaX2TLhkTegOn4U2b6Q/exec";
     
     const linksPayphone = {
         "Pro": { "Mensual": "https://ppls.me/b44zrugmq1z5Ky7BUUlUSA", "Trimestral": "https://ppls.me/KctvYvSveLfgkb0ndKGHdA", "Anual": "https://ppls.me/rNl2eyvUdLnjUJ4izZROQ" },
@@ -477,91 +482,134 @@
                 fetch(URL_APP + "?action=readUsuarios").then(r => r.json())
             ]);
             ninos = resN; usuarios = resU;
-            const sel = document.getElementById('reg-hijo'); sel.innerHTML = '<option value="">SELECCIONA A TU HIJO...</option>';
-            ninos.forEach(n => { 
-                const nombre = n.nombre || n.Nombre_Niño;
-                if(nombre) sel.innerHTML += `<option value="${nombre}">${nombre}</option>`; 
-            });
         } catch(e) { console.error("Error cargando datos."); }
-// Revisar si hay sesión guardada
-            // Revisar si hay sesión guardada y esperar un segundo a que carguen los datos
+
             const savedUser = localStorage.getItem("kidom_user");
             const savedPass = localStorage.getItem("kidom_pass");
             if(savedUser && savedPass) {
                 document.getElementById('log-user').value = savedUser;
                 document.getElementById('log-pass').value = savedPass;
-                setTimeout(login, 100); // Espera 1 seg para asegurar que ninos[] ya tiene datos
+                setTimeout(login, 100); 
             }
     }
     init();
 
     async function login() {
-        const uInput = document.getElementById('log-user').value.trim();
+        const uInput = document.getElementById('log-user').value.trim().toLowerCase();
         const pInput = document.getElementById('log-pass').value.trim();
-        const uFound = usuarios.find(u => u.cedula.toString() === uInput && u.pass.toString() === pInput);
+        const uFound = usuarios.find(u => u.hijo.toLowerCase() === uInput && u.pass.toString() === pInput);
         
         if(uFound) {
-            const h = ninos.find(n => {
-                const nombreExcel = (n.nombre || "").toString().toLowerCase().trim();
-                const nombreUsuario = uFound.hijo.toString().toLowerCase().trim();
-                return nombreExcel.includes(nombreUsuario);
-            });
+            const misHijos = ninos.filter(n => n.correoPadre && n.correoPadre.toLowerCase().trim() === uInput);
             
-            if(h) {
-                activeChild = h;
-		localStorage.setItem("kidom_user", uInput);
+            if(misHijos.length > 0) {
+                localStorage.setItem("kidom_user", uInput);
                 localStorage.setItem("kidom_pass", pInput);
-                misionesCompletadas = h.misiones ? h.misiones.toString().split(",") : [];
-                
-                // Actualizar contador al entrar
-                actualizarContadorKC();
-
-                const overlay = document.getElementById('login-overlay');
-                overlay.style.transform = "scale(1.5)"; overlay.style.opacity = "0";
-                setTimeout(() => {
-                    overlay.style.display = 'none';
-                    document.getElementById('parent-app').style.display = 'flex';
-                    document.getElementById('logout-btn').style.display = 'flex';
-                    document.getElementById('chat-bubble').style.display = 'flex';
-                    document.getElementById('kidom-coins').style.display = 'flex';
-                    document.getElementById('texture-bg').style.display = 'block';
-                }, 600);
-                
-                document.getElementById('h-foto').src = h.foto || '';
-                document.getElementById('h-nombre').innerText = h.nombre;
-                document.getElementById('h-clases').innerText = h.sesiones || "0";
-                document.getElementById('h-grupo').innerText = h.grupo || "SIN ASIGNAR";
-
-                let rawHorario = (h.horario || "").toString().toUpperCase();
-                const diasMap = { "LUN": "LUNES", "MAR": "MARTES", "MIE": "MIÉRCOLES", "JUE": "JUEVES", "VIE": "VIERNES", "SAB": "SÁBADO" };
-                for (let clave in diasMap) { if (rawHorario.includes(clave)) rawHorario = rawHorario.replace(clave, diasMap[clave] + " - "); }
-                rawHorario = rawHorario.replace(/(\d+)H/, "$1H00PM");
-                document.getElementById('h-next').innerText = rawHorario || "CONSULTAR EN ADMIN";
-                
-                let numClases = parseInt(h.sesiones) || 0;
-                let porcentaje = ((12 - numClases) / 12) * 100;
-                let pBar = document.getElementById('h-progress');
-                pBar.style.width = Math.min(Math.max(porcentaje, 0), 100) + "%";
-                if (numClases >= 6) pBar.style.backgroundColor = "var(--green-wa)";
-                else if (numClases >= 3) pBar.style.backgroundColor = "var(--yellow)";
-                else pBar.style.backgroundColor = "var(--red)";
-
-                actualizarConsejo();
-                setInterval(actualizarConsejo, 60000);
-
-                slideImages = h.logros ? h.logros.split(',').map(s => s.trim()) : [];
-                calc();
-            } else { alert("Hijo no vinculado."); }
+                if(misHijos.length === 1) {
+                    entrarConHijo(misHijos[0]);
+                } else {
+                    mostrarSelectorHijos(misHijos);
+                }
+            } else { alert("Usuario válido, pero no tienes hijos vinculados."); }
         } else { alert("Datos incorrectos."); }
+    }
+
+    function mostrarSelectorHijos(listaHijos) {
+        document.getElementById('div-login').style.display = 'none';
+        document.getElementById('div-reg').style.display = 'none';
+        const selector = document.getElementById('div-selector');
+        const container = document.getElementById('perfiles-container');
+        selector.style.display = 'block';
+        container.innerHTML = '';
+        listaHijos.forEach(h => {
+            container.innerHTML += `
+                <div onclick='entrarConHijo(${JSON.stringify(h)})' style="cursor:pointer; text-align:center;">
+                    <img src="${h.foto || 'https://i.imgur.com/Y0d87u3.png'}" style="width:80px; height:80px; border-radius:50%; border:3px solid var(--blue); object-fit:cover;">
+                    <p style="font-size:10px; font-weight:900; margin-top:5px; text-transform:uppercase;">${h.nombre.split(' ')[0]}</p>
+                </div>`;
+        });
+    }
+
+    function entrarConHijo(h) {
+        activeChild = h;
+        misionesCompletadas = h.misiones ? h.misiones.toString().split(",") : [];
+        actualizarContadorKC();
+        const overlay = document.getElementById('login-overlay');
+        overlay.style.transform = "scale(1.5)"; overlay.style.opacity = "0";
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            document.getElementById('parent-app').style.display = 'flex';
+            document.getElementById('logout-btn').style.display = 'flex';
+            document.getElementById('chat-bubble').style.display = 'flex';
+            document.getElementById('kidom-coins').style.display = 'flex';
+            document.getElementById('texture-bg').style.display = 'block';
+        }, 600);
+        document.getElementById('h-foto').src = h.foto || '';
+        document.getElementById('h-nombre').innerText = h.nombre;
+        document.getElementById('h-clases').innerText = h.sesiones || "0";
+        document.getElementById('h-grupo').innerText = h.grupo || "SIN ASIGNAR";
+        // --- INICIO DE LA MEJORA DE HORARIO ---
+        const diasSemana = ["DOM", "LUN", "MAR", "MIE", "JUE", "VIE", "SAB"];
+        const ahora = new Date();
+        const diaActualIndice = ahora.getDay(); // Ejemplo: 1 para Lunes, 2 para Martes...
+        const horaActual = ahora.getHours();
+
+        // Convertimos el texto "LUN_15H, MIE_17H" en una lista que la computadora entienda
+        let horariosArray = (h.horario || h.horarios || "").split(',').map(item => {
+            const partes = item.trim().split('_');
+            return {
+                diaOriginal: partes[0],
+                diaIndice: diasSemana.indexOf(partes[0]),
+                hora: parseInt(partes[1]) || 0
+            };
+        }).filter(item => item.diaIndice !== -1);
+
+        let proximaSesion = null;
+
+        if (horariosArray.length > 0) {
+            // Ordenamos los días de Lunes a Sábado
+            horariosArray.sort((a, b) => a.diaIndice - b.diaIndice || a.hora - b.hora);
+
+            // Intentamos encontrar una clase que sea HOY pero más tarde
+            proximaSesion = horariosArray.find(item => 
+                item.diaIndice === diaActualIndice && item.hora > (horaActual + 1)
+            );
+
+            // Si hoy ya no hay más clases, buscamos el día más cercano que venga después
+            if (!proximaSesion) {
+                proximaSesion = horariosArray.find(item => item.diaIndice > diaActualIndice);
+            }
+
+            // Si terminó la semana (es viernes noche o sábado), mostramos la primera clase del lunes
+            if (!proximaSesion) {
+                proximaSesion = horariosArray[0];
+            }
+        }
+
+        const diasNombres = { "LUN": "LUNES", "MAR": "MARTES", "MIE": "MIÉRCOLES", "JUE": "JUEVES", "VIE": "VIERNES", "SAB": "SÁBADO" };
+        if (proximaSesion) {
+            const diaTexto = diasNombres[proximaSesion.diaOriginal];
+            // Convertimos formato 24h a 12h (Ej: 15 a 3PM)
+            const horaNum = proximaSesion.hora;
+            const horaTexto = horaNum + "H00PM";
+            document.getElementById('h-next').innerText = `${diaTexto} - ${horaTexto}`;
+        } else {
+            document.getElementById('h-next').innerText = "CONSULTAR EN ADMIN";
+        }
+        // --- FIN DE LA MEJORA ---
+        let numClases = parseInt(h.sesiones) || 0;
+        let pBar = document.getElementById('h-progress');
+        pBar.style.width = Math.min(Math.max(((12 - numClases) / 12) * 100, 0), 100) + "%";
+        slideImages = h.logros ? h.logros.split(',').map(s => s.trim()) : [];
+        actualizarConsejo();
+        calc();
     }
 
     function actualizarContadorKC() {
         let total = 0;
         misionesCompletadas.forEach(id => {
             let coincidencia = id.match(/(\d+)KC/);
-            if (coincidencia) {
-                total += parseInt(coincidencia[1]);
-            }
+            if (coincidencia) total += parseInt(coincidencia[1]);
         });
         document.getElementById('h-total-kc').innerText = `🪙 ${total} KC`;
     }
@@ -585,43 +633,24 @@
         const misiones = misionesPorGrupo[grupoKey] ? misionesPorGrupo[grupoKey][kc] : [];
         const colorMap = { 1: "var(--yellow)", 2: "var(--green-wa)", 5: "var(--blue)", 10: "var(--orange)" };
         const colorOficial = colorMap[kc];
-
         const modalContent = document.getElementById('mision-modal-content');
         const modalHeader = document.getElementById('mision-modal-header');
         modalContent.style.borderColor = colorOficial;
         modalHeader.style.backgroundColor = colorOficial;
         modalHeader.style.color = (kc === 1) ? "var(--dark)" : "white";
-
         document.getElementById('mision-title').innerText = kc + " KC";
         const container = document.getElementById('mision-list-container');
-        container.innerHTML = '';
-        
-        if (misiones.length === 0) {
-            container.innerHTML = '<p style="text-align:center; font-size:12px;">No hay misiones configuradas para este grupo.</p>';
-        } else {
-            misiones.forEach((m, index) => {
-                const idUnico = `${grupoKey}_${kc}KC_${index}`;
-                const yaHecho = misionesCompletadas.includes(idUnico);
-                container.innerHTML += `
-                    <div class="mision-item">
-                        <div class="mision-text">${m}</div>
-                        <button class="btn-cumplido ${yaHecho ? 'active' : ''}" 
-                                style="${yaHecho ? 'background:' + colorOficial + '; color:' + (kc === 1 ? 'var(--dark)' : 'white') : ''}"
-                                data-id="${idUnico}" data-color="${colorOficial}"
-                                onclick="marcarCumplido(this, ${kc})">
-                            ${yaHecho ? '✓ LOGRADO' : 'CUMPLIDO'}
-                        </button>
-                    </div>`;
-            });
-        }
+        container.innerHTML = misiones.length === 0 ? '<p style="text-align:center; font-size:12px;">No hay misiones configuradas para este grupo.</p>' : misiones.map((m, index) => {
+            const idUnico = `${grupoKey}_${kc}KC_${index}`;
+            const yaHecho = misionesCompletadas.includes(idUnico);
+            return `<div class="mision-item"><div class="mision-text">${m}</div><button class="btn-cumplido ${yaHecho ? 'active' : ''}" style="${yaHecho ? 'background:' + colorOficial + '; color:' + (kc === 1 ? 'var(--dark)' : 'white') : ''}" data-id="${idUnico}" data-color="${colorOficial}" onclick="marcarCumplido(this, ${kc})">${yaHecho ? '✓ LOGRADO' : 'CUMPLIDO'}</button></div>`;
+        }).join('');
         document.getElementById('modal-misiones').style.display = 'flex';
     }
 
     async function marcarCumplido(btn, kc) {
         if(btn.classList.contains('active')) return;
-        const pin = prompt("Ingresa el PIN de Coach para validar:");
-        if(pin !== "021925") return alert("PIN Incorrecto ❌");
-
+        if(prompt("Ingresa el PIN de Coach para validar:") !== "021925") return alert("PIN Incorrecto ❌");
         const idUnico = btn.getAttribute('data-id');
         const color = btn.getAttribute('data-color');
         btn.classList.add('active');
@@ -629,25 +658,18 @@
         btn.style.color = (kc === 1) ? "var(--dark)" : "white";
         btn.innerText = "✓ LOGRADO";
         misionesCompletadas.push(idUnico);
-        
-        // Sumar al contador visual inmediatamente
         actualizarContadorKC();
-        
         fetch(`${URL_APP}?action=marcarMision&hijo=${encodeURIComponent(activeChild.nombre)}&misionId=${idUnico}`);
     }
 
     function closeMisiones() { document.getElementById('modal-misiones').style.display = 'none'; }
-
     function openLogros() {
-        if (slideImages.length === 0) { alert("¡Estamos preparando tus fotos! 📸"); return; }
-        const container = document.getElementById('modal-img-container');
-        container.innerHTML = slideImages.map((url, i) => `<img src="${url}" class="modal-img ${i === 0 ? 'active' : ''}">`).join('');
+        if (slideImages.length === 0) return alert("¡Estamos preparando tus fotos! 📸");
+        document.getElementById('modal-img-container').innerHTML = slideImages.map((url, i) => `<img src="${url}" class="modal-img ${i === 0 ? 'active' : ''}">`).join('');
         document.getElementById('modal-logros').style.display = 'flex';
         currentSlide = 0;
     }
-
     function closeModal() { document.getElementById('modal-logros').style.display = 'none'; }
-
     function changeSlide(step) {
         const slides = document.querySelectorAll('.modal-img');
         if (slides.length <= 1) return;
@@ -655,16 +677,13 @@
         currentSlide = (currentSlide + step + slides.length) % slides.length;
         slides[currentSlide].classList.add('active');
     }
-
     function toggleChat() {
         const win = document.getElementById('chat-window');
         win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
     }
-
     async function sendToCoach() {
         const input = document.getElementById('chat-input-text');
-        const text = input.value.trim();
-        if (!text) return;
+        const text = input.value.trim(); if (!text) return;
         const container = document.getElementById('chat-msgs');
         container.innerHTML += `<div class="msg msg-user">${text}</div>`;
         input.value = "";
@@ -683,10 +702,10 @@
         const precios = { Pro: { Mensual: 65, Trimestral: 180, Anual: 650 }, Max: { Mensual: 85, Trimestral: 240, Anual: 850 }, Elite: { Mensual: 115, Trimestral: 320, Anual: 1150 } };
         let base = precios[p][d];
         document.getElementById('p-banco').style.display = (m === 'Transferencia') ? 'block' : 'none';
-        document.getElementById('btn-payphone').style.display = (m === 'Tarjeta de Crédito (Payphone)') ? 'block' : 'none';
-        document.getElementById('row-payphone').style.display = (m === 'Tarjeta de Crédito (Payphone)') ? 'flex' : 'none';
+        document.getElementById('btn-payphone').style.display = (m.includes('Payphone')) ? 'block' : 'none';
+        document.getElementById('row-payphone').style.display = (m.includes('Payphone')) ? 'flex' : 'none';
         let subtotal = base / 1.15, iva = base - subtotal, total = base;
-        if(m === 'Tarjeta de Crédito (Payphone)') { let r = base * 0.06; total += r; document.getElementById('txt-pay').innerText = `$${r.toFixed(2)}`; }
+        if(m.includes('Payphone')) { let r = base * 0.06; total += r; document.getElementById('txt-pay').innerText = `$${r.toFixed(2)}`; }
         document.getElementById('txt-sub').innerText = `$${subtotal.toFixed(2)}`;
         document.getElementById('txt-iva').innerText = `$${iva.toFixed(2)}`;
         document.getElementById('res-tot').innerText = `$${total.toFixed(2)}`;
@@ -694,23 +713,21 @@
 
     function showBankDetails() {
         const b = document.getElementById('p-banco').value, info = document.getElementById('bank-info');
-        if(b === 'Pichincha') info.innerHTML = `<b>BANCO PICHINCHA</b><br>Misael Carrion | CI: 0105737324<br>Cuenta: 2201732707`;
-        else if(b === 'Austro') info.innerHTML = `<b>BANCO DEL AUSTRO</b><br>Misael Carrion | CI: 0105737324<br>Cuenta: 1041131174`;
-        else if(b === 'JEP') info.innerHTML = `<b>COOP JEP</b><br>Misael Carrion | CI: 0105737324<br>Cuenta: 406085954605`;
-        else if(b === 'Azuayo') info.innerHTML = `<b>COOP JARDÍN AZUAYO</b><br>Misael Carrion | CI: 0105737324<br>Cuenta: 2497049`;
-        else info.innerHTML = "";
+        const db = { Pichincha: "2201732707", Austro: "1041131174", JEP: "406085954605", Azuayo: "2497049" };
+        info.innerHTML = b ? `<b>Misael Carrion</b> | CI: 0105737324<br>Cuenta: ${db[b]}` : "";
         info.style.display = b ? 'block' : 'none';
     }
 
-    function payWithPayphone() {
-        const p = document.getElementById('p-plan').value, d = document.getElementById('p-dur').value;
-        window.open(linksPayphone[p][d], '_blank');
-    }
+    function payWithPayphone() { window.open(linksPayphone[document.getElementById('p-plan').value][document.getElementById('p-dur').value], '_blank'); }
 
     async function registrar() {
-        const h = document.getElementById('reg-hijo').value, u = document.getElementById('reg-user').value.trim(), p = document.getElementById('reg-pass').value.trim();
+        const h = document.getElementById('reg-hijo').value.trim().toLowerCase();
+        const u = document.getElementById('reg-user').value.trim();
+        const p = document.getElementById('reg-pass').value.trim();
         if(!h || !u || !p) return alert("Completa los datos");
-        await fetch(`${URL_APP}?action=registrarPadre&hijo=${encodeURIComponent(h)}&cedula=${encodeURIComponent(u)}&password=${encodeURIComponent(p)}`, { mode: 'no-cors' });
+        const existe = ninos.some(n => n.correoPadre && n.correoPadre.toLowerCase().trim() === h);
+        if(!existe) return alert("Este correo no está registrado en KiDOM.");
+        await fetch(`${URL_APP}?action=registerUser&hijo=${encodeURIComponent(h)}&cedula=${encodeURIComponent(u)}&pass=${encodeURIComponent(p)}`, { mode: 'no-cors' });
         alert("¡Registro exitoso!"); location.reload();
     }
     function toggleAuth(r) { document.getElementById('div-login').style.display = r?'none':'block'; document.getElementById('div-reg').style.display = r?'block':'none'; }
