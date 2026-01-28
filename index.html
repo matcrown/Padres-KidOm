@@ -313,8 +313,8 @@
         <div id="div-login">
             <input type="text" id="log-user" class="login-input" placeholder="CORREO ELECTRÓNICO">
             <input type="password" id="log-pass" class="login-input" placeholder="CONTRASEÑA">
-            <button class="btn-primary" onclick="login()">ENTRAR AL PORTAL</button>
-            <button class="btn-reg-outline" onclick="toggleAuth(true)">REGISTRO NUEVO PADRE</button>
+            <button class="btn-primary" onclick="login()">INICIAR SESION</button>
+            <button class="btn-reg-outline" onclick="toggleAuth(true)">CREAR MI CUENTA KIDOM</button>
         </div>
         <div id="div-reg" style="display:none;">
             <input type="email" id="reg-hijo" class="login-input" placeholder="TU CORREO (EL DE REGISTRO)">
@@ -397,6 +397,11 @@
                             <div id="row-payphone" class="cost-row" style="display:none; color:var(--red);"><span>Recargo Payphone (6%):</span><span id="txt-pay">$0.00</span></div>
                             <div class="cost-total"><span>Total:</span><span id="res-tot">$0.00</span></div>
                         </div>
+			<button id="btn-notificar-pago" class="btn-primary" 
+                                style="margin-top:15px; width:100%; background:var(--blue); color:white;" 
+                                onclick="procesarRenovacionAutomatica()">
+                            NOTIFICAR PAGO Y RENOVAR
+                        </button>
                         <button id="btn-payphone" class="btn-primary" style="display:none; margin-top:10px; width:100%;" onclick="payWithPayphone()">PAGAR CON TARJETA</button>
                     </div>
                 </div>
@@ -598,6 +603,29 @@
         }
         // --- FIN DE LA MEJORA ---
         let numClases = parseInt(h.sesiones) || 0;
+// --- SISTEMA DE BLOQUEO POR SESIONES AGOTADAS ---
+        const gridContainer = document.querySelector('.grid-container');
+        const coinsContainer = document.getElementById('kidom-coins');
+        const chatBubble = document.getElementById('chat-bubble');
+
+        if (numClases <= 0) {
+            // 1. Ocultamos todo lo que no sea la tarjeta de pagos
+            gridContainer.querySelectorAll('.wrapper-card').forEach((card, index) => {
+                // Suponiendo que la tarjeta de pagos es la segunda (index 1)
+                if (index !== 1) card.style.display = 'none'; 
+            });
+            coinsContainer.style.display = 'none';
+            chatBubble.style.display = 'none';
+
+            // 2. Cambiamos el mensaje del horario por un aviso de bloqueo
+            document.getElementById('h-next').innerHTML = "<span style='color:var(--red);'>ACCESO RESTRINGIDO: RENUEVA PARA CONTINUAR</span>";
+            alert("⚠️ LÍDER: Tus sesiones se han agotado. Para seguir disfrutando de la plataforma, por favor realiza tu renovación.");
+        } else {
+            // Si tiene sesiones, aseguramos que todo se vea bien
+            gridContainer.querySelectorAll('.wrapper-card').forEach(card => card.style.display = 'flex');
+            coinsContainer.style.display = 'flex';
+            chatBubble.style.display = 'flex';
+        }
         let pBar = document.getElementById('h-progress');
         pBar.style.width = Math.min(Math.max(((12 - numClases) / 12) * 100, 0), 100) + "%";
         slideImages = h.logros ? h.logros.split(',').map(s => s.trim()) : [];
@@ -731,6 +759,37 @@
         alert("¡Registro exitoso!"); location.reload();
     }
     function toggleAuth(r) { document.getElementById('div-login').style.display = r?'none':'block'; document.getElementById('div-reg').style.display = r?'block':'none'; }
+// --- NUEVA FUNCIÓN: PROCESAR RENOVACIÓN Y CARGAR SESIONES AL EXCEL ---
+    async function procesarRenovacionAutomatica() {
+        if (!activeChild) return alert("Error: No hay un perfil activo.");
+        
+        const plan = document.getElementById('p-plan').value;
+        const duracion = document.getElementById('p-dur').value;
+        const btn = document.getElementById('btn-notificar-pago');
+
+        // Lógica de cálculo de sesiones idéntica a tu consola administrativa
+        let baseSesiones = (plan === "Pro") ? 8 : (plan === "Max") ? 12 : 20;
+        let meses = (duracion === "Mensual") ? 1 : (duracion === "Trimestral") ? 3 : 12;
+        let totalSesionesNuevas = baseSesiones * meses;
+
+        if (!confirm(`¿Confirmas que has realizado el pago? Se cargarán ${totalSesionesNuevas} sesiones al perfil de ${activeChild.nombre}.`)) return;
+
+        btn.innerText = "PROCESANDO...";
+        btn.disabled = true;
+
+        // Llamada al engranaje que pusimos en el Apps Script
+        const urlFinal = `${URL_APP}?action=renovarSesiones&nombre=${encodeURIComponent(activeChild.nombre)}&sesiones=${totalSesionesNuevas}`;
+
+        try {
+            await fetch(urlFinal, { mode: 'no-cors' });
+            alert("✅ ¡ÉXITO! Tu renovación ha sido registrada. Las sesiones se actualizarán en breve.");
+            location.reload(); // Recarga para que el padre vea su nuevo saldo inmediatamente
+        } catch (e) {
+            alert("❌ Hubo un error de conexión. Por favor, intenta de nuevo o contacta a soporte.");
+            btn.innerText = "NOTIFICAR PAGO Y RENOVAR";
+            btn.disabled = false;
+        }
+    }
 </script>
 </body>
 </html>
